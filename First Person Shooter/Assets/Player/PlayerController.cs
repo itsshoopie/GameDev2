@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
+using Unity.VisualScripting;
 
 
 public class PlayerController : MonoBehaviour
@@ -12,7 +13,7 @@ public class PlayerController : MonoBehaviour
     private bool grounded;
 
     //Movement variables
-    private CharacterController character_Controller;
+    private CharacterController Character_Controller;
     private Vector3 player_velocity;
     private Vector3 wish_dir = Vector3.zero;
     public float max_speed = 6;
@@ -51,19 +52,51 @@ public class PlayerController : MonoBehaviour
         if(invert_y) invert_factor_y = -1;
 
         //get ref to character controller
-        character_Controller = GetComponent<characterController>();
+        Character_Controller = GetComponent<CharacterController>();
 
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        //debug
+        debug_text.text = "Wish Dir " + wish_dir.ToString();
+        debug_text.text += "\nPlayer Velocity: " + player_velocity.ToString();
+        debug_text.text += "\nPlayer_Speed" + new Vector3(player_velocity.x, 0, player_velocity.z).magnitude.ToString();
         Look();
-
-
-
     }
+private void FixedUpdate()
+{
+    //find wish dir
+    wish_dir = transform.right * move_input.x + transform.forward * move_input.y;
+    wish_dir = wish_dir.normalized;
+
+    grounded = Character_Controller.isGrounded;
+    if(grounded)
+    {
+        player_velocity = MoveGround(wish_dir, player_velocity);
+    }
+    else
+    {
+        player_velocity = MoveAir(wish_dir, player_velocity);
+    
+    }
+
+    //Gravity
+    player_velocity.y -= gravity * Time.deltaTime;
+    if(grounded && player_velocity.y < 0) //cap y velocity on ground
+    {
+        player_velocity.y = -2;
+    }
+
+    //Move player
+    Character_Controller.Move(player_velocity * Time.deltaTime);
+
+
+    player_velocity = MoveGround(wish_dir, player_velocity);
+    Character_Controller.Move(player_velocity * Time.deltaTime);
+}
+   
 
     public void GetLookInput(InputAction.CallbackContext context)
     {
@@ -94,7 +127,7 @@ public class PlayerController : MonoBehaviour
     {
         if(grounded)
         {
-            //something for later
+           player_velocity.y = jump_impulse;
         }
     }
 
@@ -102,9 +135,9 @@ public class PlayerController : MonoBehaviour
     {
         //project current_velocity on to the wish_dir
         float proj_speed = Vector3.Dot(current_velocity, wish_dir);
-        float accel_speed = accel *Tiem.deltaTime;
+        float accel_speed = accel *Time.deltaTime;
 
-        if(proj_speed _ accel_speed > max_speed)
+        if(proj_speed + accel_speed > max_speed)
             accel_speed = max_speed - proj_speed;
         
 
@@ -115,7 +148,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 MoveGround(Vector3 wish_dir, Vector3 current_velocity)
     {
         Vector3 new_velocity = new Vector3(current_velocity.x, 0, current_velocity.z);
-        float speed = move_velocity.magnitude;
+        float speed = new_velocity.magnitude;
         if(speed <= stop_speed)
         {
             new_velocity = Vector3.zero;
@@ -126,7 +159,9 @@ public class PlayerController : MonoBehaviour
             float drop = speed * friction * Time.deltaTime;
             new_velocity *= Mathf.Max(speed - drop, 0) /speed;
         }
-        new_velocity - new Vector3(new_velocity.x, current_velocity.y, new_velocity.z);
+
+
+        new_velocity = new Vector3(new_velocity.x, current_velocity.y, new_velocity.z);
         return Accelerate(wish_dir, new_velocity, accelleration, max_speed);
     }
 
@@ -142,5 +177,6 @@ public class PlayerController : MonoBehaviour
 
         return Accelerate(wish_dir, current_velocity, accelleration, max_speed);
     }
+
 
 }
