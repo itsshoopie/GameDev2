@@ -1807,6 +1807,7 @@ GameObject:
   - component: {fileID: 1730248847}
   - component: {fileID: 1730248846}
   - component: {fileID: 1730248845}
+  - component: {fileID: 1730248849}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1857,8 +1858,8 @@ MonoBehaviour:
     m_ActionName: Player/Look[/Mouse/delta]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1730248846}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+      - m_Target: {fileID: 1730248849}
+        m_TargetAssemblyTypeName: PlayerStateMachine, Assembly-CSharp
         m_MethodName: GetMoveInput
         m_Mode: 0
         m_Arguments:
@@ -1873,8 +1874,8 @@ MonoBehaviour:
     m_ActionName: Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1730248846}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+      - m_Target: {fileID: 1730248849}
+        m_TargetAssemblyTypeName: PlayerStateMachine, Assembly-CSharp
         m_MethodName: GetJumpInput
         m_Mode: 0
         m_Arguments:
@@ -1904,7 +1905,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b41f51ded8b84bcaaa0fc5a54eb1cbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debug_text: {fileID: 779619832}
   cam: {fileID: 799458806}
   invert_x: 0
   invert_y: 0
@@ -1951,6 +1951,25 @@ Transform:
   - {fileID: 799458808}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1730248849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730248844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8080d312a1b54d398dedc4a4ddb6e80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debug_text: {fileID: 779619832}
+  grounded: 0
+  move_input: {x: 0, y: 0}
+  Character_Controller: {fileID: 0}
+  player_velocity: {x: 0, y: 0, z: 0}
+  wish_dir: {x: 0, y: 0, z: 0}
+  jump_button_pressed: 0
 --- !u!1 &1918618439
 GameObject:
   m_ObjectHideFlags: 0
