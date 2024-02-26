@@ -12,3 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f1046da9b327427f9e373c2853a1236, type: 3}
   m_Name: Pistol
   m_EditorClassIdentifier: 
+  range: 1000
+  ammo_per_clip: 12
+  automatic: 1
+  primary_fire_delay: 0.2
+  spread: 1.5
