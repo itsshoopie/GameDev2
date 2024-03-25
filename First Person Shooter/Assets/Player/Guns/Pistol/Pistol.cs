@@ -28,6 +28,12 @@ public class Pistol : Gun
             }
         ammo_in_clip--;
         if(ammo_in_clip <= 0) ammo_in_clip = gun_data.ammo_per_clip;
+
+        //partivles
+        muzzle_flash.Play();
+        TrailRenderer trail = Instantiate(bullet_trail, shoot_point.position, Quaternion.identity);
+        StartCoroutine(SpawnTrail(trail, dir, hit));
+        
         }
 
         }

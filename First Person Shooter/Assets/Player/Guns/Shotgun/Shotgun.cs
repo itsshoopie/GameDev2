@@ -24,8 +24,11 @@ public class Shotgun : Gun
                     if(Physics.Raycast(ray, out hit, gun_data.range))
                     {
                         Debug.DrawLine(transform.position, hit.point, Color.green, 0.0f);
-                        print("hello");
                     }
+
+                    //Trails
+                    TrailRenderer trail = Instantiate(bullet_trail, shoot_point.position, Quaternion.identity);
+                    StartCoroutine(SpawnTrail(trail, dir, hit));
                 }
 
 
@@ -33,6 +36,9 @@ public class Shotgun : Gun
             ammo_in_clip--;
             if(ammo_in_clip <= 0) ammo_in_clip = gun_data.ammo_per_clip;
             }
+
+            //Muzzle Flash
+            muzzle_flash.Play();
 
         }
     }

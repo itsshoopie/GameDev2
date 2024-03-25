@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
 using TMPro;
+using System.Transactions;
 
 public class Gun : MonoBehaviour
 {
@@ -17,6 +18,19 @@ public class Gun : MonoBehaviour
     protected bool primary_fire_is_shooting = false;
     protected bool primary_fire_hold = false;
     protected float shoot_delay_timer = 0.05f;
+
+    //Trail and Particles
+    [SerializeField]
+    protected Transform shoot_point;
+    [SerializeField]
+    protected TrailRenderer bullet_trail;
+    [SerializeField]
+    protected ParticleSystem muzzle_flash;
+    [SerializeField]
+    protected ParticleSystem impact_particles;
+
+
+
 
     //Debug
     public TMP_Text debug_text;
@@ -87,4 +101,36 @@ public class Gun : MonoBehaviour
     {
 
     }
+
+    protected IEnumerator SpawnTrail(TrailRenderer trail, Vector3 direction, RaycastHit hit)
+    {
+        float time = 0;
+        Vector3 start_position = trail.transform.position;
+        Vector3 end_position = Vector3.zero;
+        if(hit.point == Vector3.zero)
+        {
+            end_position = start_position + (direction * 100);
+        }
+        else end_position = hit.point;
+
+        while(time < 1)
+        {
+            trail.transform.position = Vector3.Lerp(start_position, end_position, time);
+            time += Time.deltaTime / trail.time;
+            yield return null;
+        }
+
+        if(hit.point!= Vector3.zero)
+        {
+            Instantiate(impact_particles, hit.point, Quaternion.LookRotation(hit.normal));
+        }
+        Destroy(trail.gameObject, trail.time);
+
+    }
+
+
+
+
+
+
 }
